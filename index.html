@@ -74,26 +74,26 @@
 
     <!-- Custom Script Here -->
     <script>
-        // const songName
-        // document.getElementById("songItem").style.visibility = "hidden";
+
         let search = document.getElementById('searchName');
         search.addEventListener("click", function () {
             const songName = document.getElementById('inputSongName').value;
             fetch(`https://api.lyrics.ovh/suggest/${songName}`)
                 .then(res => res.json())
                 .then(data => {
+                    anotherData = data;
                     for (let i = 0; i < 10; i++) {
-                        const title = data.data[i].title;
-                        const artistName = data.data[i].artist.name;
+                        var title = data.data[i].title;
+                        var artist = data.data[i].artist.name;
                         const lyric = data.data[i].id;
                         const id = data.data[i].id;
                         document.getElementById('allResults').innerHTML += `<div class="single-result row align-items-center my-3 p-3">
                             <div class="col-md-6">
                            <h3 id="titleName" class="lyrics-name">${title}</h3>
-                      <p id="artistName" class="author lead">Album by <span>${artistName}</span></p>
+                      <p id="artistName" class="author lead">Album by <span>${artist}</span></p>
                       </div>
                       <div class="col-md-3 text-md-right text-center">
-                    <button class="btn btn-success" onclick="findLyrics()">Get Lyric<span></span></button>
+                    <button class="btn btn-success" onclick="getLyrics('${artist}','${title}')">Get Lyric<span></span></button>
                     </div>
                       </div>
                       `
@@ -101,6 +101,23 @@
 
                 })
         })
+        //testLyric
+
+        function getLyrics(artist, title) {
+            fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
+                .then(res => res.json())
+                .then(data => {
+                    let lyrics = data.lyrics;
+                    document.getElementById('fullLyric').innerHTML = `<div class="single-lyrics text-center">
+                     <button class="btn go-back">&lsaquo;</button>
+                     <h2 class="text-success mb-4">Song Lyrics</h2>
+                         <h5>${lyrics}</h5>
+                           </div>`
+                })
+        }
+
+
+
     </script>
 
 </body>
